@@ -1,0 +1,21 @@
+{
+  "name": "order-service",
+  "version": "1.0.0",
+  "description": "Order Microservice for E-commerce System",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^7.6.3",
+    "dotenv": "^16.3.1",
+    "cors": "^2.8.5",
+    "helmet": "^7.0.0",
+    "amqplib": "^0.10.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+} 

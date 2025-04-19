@@ -1,0 +1,109 @@
+version: '3.8'
+
+services:
+  product-service:
+    build: ./product-service
+    ports:
+      - "3001:3001"
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/product-service
+      - RABBITMQ_URI=amqp://rabbitmq:5672
+    depends_on:
+      - mongodb
+      - rabbitmq
+
+  order-service:
+    build: ./order-service
+    ports:
+      - "3002:3002"
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/order-service
+      - RABBITMQ_URI=amqp://rabbitmq:5672
+    depends_on:
+      - mongodb
+      - rabbitmq
+
+  customer-service:
+    build: ./customer-service
+    ports:
+      - "3003:3003"
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/customer-service
+      - RABBITMQ_URI=amqp://rabbitmq:5672
+    depends_on:
+      - mongodb
+      - rabbitmq
+
+  payment-service:
+    build: ./payment-service
+    ports:
+      - "3004:3004"
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/payment-service
+      - RABBITMQ_URI=amqp://rabbitmq:5672
+    depends_on:
+      - mongodb
+      - rabbitmq
+
+  inventory-service:
+    build: ./inventory-service
+    ports:
+      - "3005:3005"
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/inventory-service
+      - RABBITMQ_URI=amqp://rabbitmq:5672
+    depends_on:
+      - mongodb
+      - rabbitmq
+
+  shipping-service:
+    build: ./shipping-service
+    ports:
+      - "3006:3006"
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/shipping-service
+      - RABBITMQ_URI=amqp://rabbitmq:5672
+    depends_on:
+      - mongodb
+      - rabbitmq
+
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "3000:3000"
+    environment:
+      - PRODUCT_SERVICE_URL=http://product-service:3001
+      - ORDER_SERVICE_URL=http://order-service:3002
+      - CUSTOMER_SERVICE_URL=http://customer-service:3003
+      - PAYMENT_SERVICE_URL=http://payment-service:3004
+      - INVENTORY_SERVICE_URL=http://inventory-service:3005
+      - SHIPPING_SERVICE_URL=http://shipping-service:3006
+    depends_on:
+      - product-service
+      - order-service
+      - customer-service
+      - payment-service
+      - inventory-service
+      - shipping-service
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"   # AMQP protocol port
+      - "15672:15672" # Management UI port
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+volumes:
+  mongodb_data:
+  rabbitmq_data: 
